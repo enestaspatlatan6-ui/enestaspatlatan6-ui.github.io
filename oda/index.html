@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yankı — Sesli Oda</title>
+<style>
+:root{--bg:#0b0d17;--kart:#161a2b;--cizgi:#2a3147;--yazi:#eef1ff;--soluk:#9aa3c0;--altin:#ffcf5c;--yesil:#3fd07a;--mor:#8b7bff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tema,radial-gradient(circle at 50% 0%,#1a1d35,#0b0d17 60%));color:var(--yazi);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.sar{max-width:620px;margin:0 auto;padding:14px;padding-bottom:40px}
+h1{font-size:22px;margin:6px 0}
+.alt{color:var(--soluk);font-size:13px;margin:0 0 12px}
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;padding:14px;margin-bottom:12px}
+input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--cizgi);background:#0d1020;color:var(--yazi);font-size:16px}
+.satir{display:flex;gap:8px}
+button{padding:11px 14px;border:0;border-radius:11px;background:var(--mor);color:#0b0d17;font-weight:700;font-size:15px;cursor:pointer}
+button.ik{background:#232a40;color:var(--yazi)}
+.cuzdan{display:flex;align-items:center;gap:6px;justify-content:flex-end;color:var(--altin);font-weight:700;font-size:18px}
+#online{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.kisi{background:#0d1020;border:1px solid var(--cizgi);border-radius:20px;padding:4px 10px;font-size:13px;display:flex;align-items:center;gap:5px}
+.kisi.konusuyor{border-color:var(--yesil);box-shadow:0 0 10px rgba(63,208,122,.4)}
+.kisi.cv1{border-color:#ffcf5c;box-shadow:0 0 8px rgba(255,207,92,.5)}
+.kisi.cv2{border-color:#ff5c8a;box-shadow:0 0 10px rgba(255,92,138,.6)}
+.kisi.cv3{border-image:linear-gradient(90deg,#8b7bff,#3fd07a,#ffcf5c) 1;box-shadow:0 0 12px rgba(139,123,255,.6)}
+.kisi.cv4{border-color:#54e0ff;box-shadow:0 0 16px rgba(84,224,255,.8),inset 0 0 8px rgba(84,224,255,.4)}
+.cercler{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cerc{flex:1 1 44%;background:#0d1020;border:1px solid var(--cizgi);border-radius:12px;padding:8px;text-align:center;cursor:pointer}
+.cerc .ornek{display:inline-block;padding:4px 10px;border:2px solid var(--cizgi);border-radius:20px;margin-bottom:4px;font-size:12px}
+.cerc[aria-selected=true]{outline:2px solid var(--altin)}
+#sohbet{display:flex;flex-direction:column;gap:6px;max-height:34vh;overflow:auto;margin:8px 0}
+.m{padding:7px 11px;border-radius:12px;max-width:90%;white-space:pre-wrap;font-size:14px}
+.ben{align-self:flex-end;background:var(--mor);color:#0b0d17}
+.o{align-self:flex-start;background:#0d1020;border:1px solid var(--cizgi)}
+.sis{align-self:center;color:var(--altin);font-size:13px}
+.gizli{display:none!important}
+/* slot */
+.slot{text-align:center}
+.makara{display:flex;gap:8px;justify-content:center;margin:12px 0}
+.mk{width:84px;height:100px;background:#0d1020;border:2px solid var(--cizgi);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden}
+.mk.kazanan{border-color:var(--altin);box-shadow:0 0 18px rgba(255,207,92,.6)}
+.slotSonuc{font-size:17px;min-height:24px;margin:6px 0;font-weight:700}
+.odul{color:var(--altin)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+td{padding:3px 6px;border-bottom:1px solid var(--cizgi)}
+.sekme{display:flex;gap:6px;margin-bottom:12px}
+.sekme button{flex:1;background:var(--kart);border:1px solid var(--cizgi);color:var(--yazi);font-weight:600}
+.sekme button[aria-selected=true]{border-color:var(--altin);color:var(--altin)}
+.tema-sec{display:flex;gap:6px;flex-wrap:wrap}
+.tema-sec button{flex:1;font-size:12px;padding:7px 4px}
+.hediye{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.hediye button{background:#0d1020;border:1px solid var(--cizgi);color:var(--altin);font-size:13px;padding:7px 10px}
+</style></head><body><div class="sar">
+
+<div style="display:flex;align-items:center;justify-content:space-between">
+  <h1>🎙️ Yankı</h1>
+  <div class="cuzdan">🪙 <span id="bakiye">0</span> <button class="ik" id="gunluk" style="padding:5px 10px;font-size:12px">🎁 Günlük</button></div>
+</div>
+<p class="alt">Sesli odalar, hediyeler ve şans oyunları. Jetonlar eğlence içindir, gerçek paraya çevrilmez.</p>
+
+<!-- GİRİŞ -->
+<div id="giris" class="kart">
+  <p style="margin-top:0"><b>Hoş geldin!</b> Bir takma ad seç, başla.</p>
+  <input id="nick" placeholder="Takma adın" autocomplete="off" maxlength="18">
+  <button style="width:100%;margin-top:10px" id="basla">Başla</button>
+</div>
+
+<!-- UYGULAMA -->
+<div id="uygulama" class="gizli">
+  <div class="sekme">
+    <button aria-selected="true" data-s="lobi">Odalar</button>
+    <button aria-selected="false" data-s="slot">🎰 Slot</button>
+  </div>
+
+  <!-- LOBİ -->
+  <section id="lobi">
+    <div class="kart">
+      <p style="margin-top:0"><b>Odaya gir / oda aç</b></p>
+      <div class="satir"><input id="odaAd" placeholder="Oda adı (örn. sohbet)" autocomplete="off"></div>
+      <p class="alt" style="margin:8px 0 4px">Oda teması</p>
+      <div class="tema-sec" id="temalar"></div>
+      <button style="width:100%;margin-top:10px" id="odaGir">Odaya gir</button>
+    </div>
+    <div class="kart">
+      <p style="margin-top:0"><b>🖼️ Çerçeve Dükkanı</b> <span class="alt">— adının etrafında parlar, odada herkes görür</span></p>
+      <div class="cercler" id="cercler"></div>
+    </div>
+  </section>
+
+  <!-- ODA -->
+  <section id="oda" class="gizli">
+    <div class="kart">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b id="odaBaslik">Oda</b>
+        <button class="ik" id="odaCik" style="padding:6px 12px">Çık</button>
+      </div>
+      <div id="online"></div>
+      <div class="satir" style="margin-top:6px">
+        <button id="mik" style="flex:1">🎤 Mikrofonu aç</button>
+        <button class="ik" id="slotOda" style="flex:1">🎰 Slot oyna</button>
+      </div>
+      <div id="sohbet"></div>
+      <div class="hediye" id="hediyeler"></div>
+      <form id="mesajForm" class="satir" style="margin-top:8px"><input id="mesaj" placeholder="Mesaj yaz" autocomplete="off"><button>Gönder</button></form>
+      <p class="alt" id="odaDurum" style="margin:8px 0 0"></p>
+    </div>
+  </section>
+
+  <!-- SLOT -->
+  <section id="slot" class="gizli">
+    <div class="kart slot">
+      <b>🎰 Şans Çarkı</b>
+      <div class="makara" id="makara"><div class="mk">❓</div><div class="mk">❓</div><div class="mk">❓</div></div>
+      <div class="slotSonuc" id="slotSonuc">Çevir ve şansını dene!</div>
+      <div class="satir" style="justify-content:center">
+        <button class="ik" id="bahisAzalt" style="flex:0 0 46px">−</button>
+        <div style="align-self:center;min-width:120px">Bahis: <b id="bahis">10</b> 🪙</div>
+        <button class="ik" id="bahisArtir" style="flex:0 0 46px">+</button>
+      </div>
+      <button style="width:100%;margin-top:10px" id="cevir">ÇEVİR</button>
+      <table id="odemeTablo"></table>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.10.1/mqtt.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const DB = {
+  get nick(){ try { return localStorage.getItem("so_nick") || ""; } catch(e){ return ""; } },
+  set nick(v){ try { localStorage.setItem("so_nick", v); } catch(e){} },
+  get coin(){ try { return parseInt(localStorage.getItem("so_coin")) || 0; } catch(e){ return 0; } },
+  set coin(v){ try { localStorage.setItem("so_coin", Math.max(0, Math.round(v))); } catch(e){} yazBakiye(); },
+};
+function yazBakiye(){ $("bakiye").textContent = DB.coin.toLocaleString("tr"); }
+if (DB.coin === 0 && !localStorage.getItem("so_basladi")) { DB.coin = 1000; localStorage.setItem("so_basladi","1"); } // hoş geldin jetonu
+yazBakiye();
+
+// ---------- GÜNLÜK BONUS ----------
+$("gunluk").onclick = () => {
+  const bugun = new Date().toLocaleDateString("tr-CA");
+  if (localStorage.getItem("so_gunluk") === bugun) { $("gunluk").textContent = "✓ Alındı"; return; }
+  DB.coin += 200; localStorage.setItem("so_gunluk", bugun); $("gunluk").textContent = "+200 🎁";
+  setTimeout(() => $("gunluk").textContent = "✓ Alındı", 1500);
+};
+(function(){ if (localStorage.getItem("so_gunluk") === new Date().toLocaleDateString("tr-CA")) $("gunluk").textContent = "✓ Alındı"; })();
+
+// ---------- ÇERÇEVELER (özgün) ----------
+const CERCEVE = [
+  { id:"", ad:"Yok", fiyat:0 },
+  { id:"cv1", ad:"Altın", fiyat:500 },
+  { id:"cv2", ad:"Gül", fiyat:1500 },
+  { id:"cv3", ad:"Gökkuşağı", fiyat:5000 },
+  { id:"cv4", ad:"Buz", fiyat:12000 },
+];
+function sahipCerceve(){ try { return JSON.parse(localStorage.getItem("so_cercler")||"[\"\"]"); } catch(e){ return [""]; } }
+function seciliCerceve(){ return localStorage.getItem("so_cerc") || ""; }
+function cizCerceveler(){
+  const sahip = sahipCerceve(), sec = seciliCerceve(), el = $("cercler"); el.innerHTML = "";
+  for (const c of CERCEVE){
+    const d = document.createElement("div"); d.className = "cerc"; d.setAttribute("aria-selected", c.id===sec);
+    const var_ = sahip.includes(c.id);
+    d.innerHTML = `<div class="ornek ${c.id}">${benimAd||"sen"}</div><div>${c.ad}</div><div class="alt">${var_?(c.id===sec?"seçili":"seç"):(c.fiyat+" 🪙")}</div>`;
+    d.onclick = () => {
+      let s = sahipCerceve();
+      if (!s.includes(c.id)){ if (DB.coin < c.fiyat){ d.querySelector(".alt").textContent="yetersiz 🪙"; return; } DB.coin -= c.fiyat; s.push(c.id); localStorage.setItem("so_cercler", JSON.stringify(s)); }
+      localStorage.setItem("so_cerc", c.id); cizCerceveler();
+      if (_istemci) yayinla({t:"ping", konusuyor:konusuyorMu, cf:c.id});
+    };
+    el.appendChild(d);
+  }
+}
+
+// ---------- SLOT ----------
+const SEMBOL = [
+  { s:"🍒", ag:28, uc:3 }, { s:"🍋", ag:24, uc:5 }, { s:"🔔", ag:18, uc:10 },
+  { s:"⭐", ag:14, uc:25 }, { s:"💎", ag:9, uc:75 }, { s:"7️⃣", ag:5, uc:250 },
+];
+const HAVUZ = SEMBOL.flatMap(x => Array(x.ag).fill(x.s));
+let bahis = 10;
+function slotTablo(){
+  $("odemeTablo").innerHTML = "<tr><td>Üç aynı</td><td>Ödül (bahis ×)</td></tr>" +
+    SEMBOL.map(x => `<tr><td>${x.s} ${x.s} ${x.s}</td><td class="odul">×${x.uc}</td></tr>`).join("") +
+    `<tr><td>İki aynı</td><td class="odul">×1</td></tr>`;
+}
+slotTablo();
+function cevir(){
+  if (donuyor) return;
+  if (DB.coin < bahis) { $("slotSonuc").textContent = "Yetersiz jeton!"; return; }
+  DB.coin -= bahis;
+  const sonuc = [0,0,0].map(() => HAVUZ[Math.floor(Math.random()*HAVUZ.length)]);
+  donuyor = true; $("cevir").disabled = true;
+  const mk = $("makara").children;
+  let adim = 0;
+  const t = setInterval(() => {
+    for (let i=0;i<3;i++){ mk[i].classList.remove("kazanan"); mk[i].textContent = HAVUZ[Math.floor(Math.random()*HAVUZ.length)]; }
+    adim++;
+    if (adim > 10){
+      clearInterval(t);
+      for (let i=0;i<3;i++) mk[i].textContent = sonuc[i];
+      let odul = 0, kazanan = false;
+      if (sonuc[0]===sonuc[1] && sonuc[1]===sonuc[2]){ const uc = SEMBOL.find(x=>x.s===sonuc[0]).uc; odul = bahis*uc; kazanan = true; for (const m of mk) m.classList.add("kazanan"); }
+      else if (sonuc[0]===sonuc[1] || sonuc[1]===sonuc[2] || sonuc[0]===sonuc[2]){ odul = bahis*1; kazanan = true; }
+      if (odul>0){ DB.coin += odul; $("slotSonuc").innerHTML = `<span class="odul">Kazandın! +${odul.toLocaleString("tr")} 🪙</span>`; }
+      else $("slotSonuc").textContent = "Olmadı, tekrar dene.";
+      donuyor = false; $("cevir").disabled = false;
+    }
+  }, 70);
+}
+let donuyor = false;
+$("cevir").onclick = cevir;
+$("bahisArtir").onclick = () => { bahis = Math.min(500, bahis+10); $("bahis").textContent = bahis; };
+$("bahisAzalt").onclick = () => { bahis = Math.max(10, bahis-10); $("bahis").textContent = bahis; };
+
+// ---------- TEMALAR (Çukur'dan) ----------
+const TEMA = {
+  classic:"radial-gradient(circle at 50% 0%,#1a1d35,#0b0d17 60%)",
+  neon:"radial-gradient(circle at 50% 0%,#2a0a3a,#0b0d17 60%)",
+  ocean:"radial-gradient(circle at 50% 0%,#07314a,#0b0d17 60%)",
+  sunset:"radial-gradient(circle at 50% 0%,#4a1e10,#0b0d17 60%)",
+  emerald:"radial-gradient(circle at 50% 0%,#0a3a24,#0b0d17 60%)",
+};
+let seciliTema = "classic";
+const tk = $("temalar");
+Object.keys(TEMA).forEach(t => { const b = document.createElement("button"); b.className="ik"; b.textContent=t; b.onclick=()=>{ seciliTema=t; document.body.style.setProperty("--tema",TEMA[t]); tk.querySelectorAll("button").forEach(x=>x.style.outline=x===b?"2px solid var(--altin)":""); }; tk.appendChild(b); });
+
+// ---------- SEKMELER ----------
+document.querySelectorAll(".sekme button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".sekme button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  $("lobi").classList.toggle("gizli", b.dataset.s!=="lobi" || !odaKapali());
+  $("oda").classList.toggle("gizli", b.dataset.s!=="lobi" || odaKapali());
+  $("slot").classList.toggle("gizli", b.dataset.s!=="slot");
+});
+function odaKapali(){ return !_istemci; }
+
+// ---------- GİRİŞ ----------
+$("nick").value = DB.nick;
+$("basla").onclick = () => {
+  const n = $("nick").value.trim().slice(0,18); if (!n) return;
+  DB.nick = n; benimAd = n;
+  $("giris").classList.add("gizli"); $("uygulama").classList.remove("gizli");
+  cizCerceveler();
+};
+let benimAd = DB.nick;
+
+// ---------- ODA (MQTT canlı + WebRTC ses) ----------
+const BROKER = "wss://broker.emqx.io:8084/mqtt";
+let _istemci = null, _konu = "", _odaAd = "", benimId = "u" + Math.random().toString(36).slice(2,9);
+const online = {}; // id -> {ad, z, konusuyor}
+const HEDIYE = [["🌹",10],["🍺",50],["💎",200],["👑",1000]];
+
+async function odaHash(s){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("seslioda|"+s)); return [...new Uint8Array(b)].slice(0,8).map(x=>x.toString(16).padStart(2,"0")).join(""); }
+function odaYaz(metin, tip){ const d=document.createElement("div"); d.className="m "+(tip||"o"); d.textContent=metin; $("sohbet").appendChild(d); $("sohbet").scrollTop=1e9; }
+function cizOnline(){
+  const el=$("online"); el.innerHTML="";
+  const liste=[{id:benimId,ad:benimAd+" (sen)",konusuyor:konusuyorMu,cf:seciliCerceve()},...Object.values(online).map(x=>({...x}))];
+  for(const k of liste){ const d=document.createElement("div"); d.className="kisi"+(k.konusuyor?" konusuyor":"")+(k.cf?" "+k.cf:""); d.textContent=(k.konusuyor?"🔊 ":"")+k.ad; el.appendChild(d); }
+}
+function yayinla(obj){ if(_istemci) _istemci.publish(_konu, JSON.stringify({...obj, id:benimId, ad:benimAd})); }
+
+$("odaGir").onclick = async () => {
+  const ad = $("odaAd").value.trim(); if(!ad){ return; }
+  _odaAd = ad;
+  const h = await odaHash(ad); _konu = "seslioda/oda/"+h;
+  const istemci = mqtt.connect(BROKER, { clientId: benimId, connectTimeout:8000, reconnectPeriod:3000 });
+  _istemci = istemci;
+  istemci.on("connect", () => {
+    istemci.subscribe(_konu);
+    $("odaBaslik").textContent = "🎙️ "+ad; $("lobi").classList.add("gizli"); $("oda").classList.remove("gizli");
+    $("odaDurum").textContent = "Odadasın. Mikrofonu açarsan sesin duyulur.";
+    yayinla({t:"katil", cf:seciliCerceve()}); odaYaz(benimAd+" odaya girdi","sis");
+    const ping=()=>yayinla({t:"ping", konusuyor:konusuyorMu, cf:seciliCerceve()}); ping(); _pingT=setInterval(ping,8000);
+    _temizT=setInterval(()=>{const n=Date.now();let d=false;for(const k in online)if(n-online[k].z>22000){delete online[k];d=true;}if(d)cizOnline();},4000);
+  });
+  istemci.on("message", (k,v)=>{ let m; try{m=JSON.parse(v.toString());}catch(e){return;} if(m.id===benimId)return; mesajGeldi(m); });
+  istemci.on("error", ()=>{ $("odaDurum").textContent="Bağlanamadı, tekrar dene."; });
+  cizizgaraHediye();
+};
+function cizizgaraHediye(){ const h=$("hediyeler"); h.innerHTML=""; HEDIYE.forEach(([s,f])=>{ const b=document.createElement("button"); b.textContent=s+" "+f; b.title="Hediye gönder ("+f+" jeton)"; b.onclick=()=>hediyeGonder(s,f); h.appendChild(b); }); }
+function hediyeGonder(s,f){ if(DB.coin<f){ odaYaz("Yetersiz jeton","sis"); return; } DB.coin-=f; yayinla({t:"hediye",s,f}); odaYaz("Sen "+s+" gönderdin (−"+f+")","sis"); }
+function mesajGeldi(m){
+  if(m.t==="ping"||m.t==="katil"){ online[m.id]={ad:m.ad,z:Date.now(),konusuyor:!!m.konusuyor,cf:m.cf||""}; if(m.t==="katil"){ odaYaz(m.ad+" odaya girdi","sis"); yayinla({t:"ping",konusuyor:konusuyorMu,cf:seciliCerceve()}); } cizOnline(); return; }
+  if(m.t==="cik"){ delete online[m.id]; odaYaz(m.ad+" çıktı","sis"); cizOnline(); return; }
+  if(m.t==="msg"){ odaYaz(m.ad+": "+m.metin,"o"); return; }
+  if(m.t==="hediye"){ odaYaz(m.ad+" "+m.s+" gönderdi","sis"); return; }
+  if(["offer","answer","ice"].includes(m.t) && m.hedef===benimId){ sesSinyal(m); return; }
+}
+$("mesajForm").onsubmit = e => { e.preventDefault(); const t=$("mesaj").value.trim(); if(!t)return; yayinla({t:"msg",metin:t.slice(0,300)}); odaYaz("Sen: "+t,"ben"); $("mesaj").value=""; };
+$("odaCik").onclick = odadanCik;
+$("slotOda").onclick = () => { document.querySelector('.sekme button[data-s="slot"]').click(); };
+function odadanCik(){ try{ yayinla({t:"cik"}); }catch(e){} if(_istemci){_istemci.end(true);_istemci=null;} clearInterval(_pingT); clearInterval(_temizT); for(const k in online)delete online[k]; sesKapat(); $("oda").classList.add("gizli"); $("lobi").classList.remove("gizli"); $("sohbet").innerHTML=""; }
+let _pingT, _temizT;
+
+// ---------- SES: WebRTC mesh, sinyal MQTT üzerinden ----------
+let localStream=null, konusuyorMu=false; const pcler={};
+$("mik").onclick = async () => {
+  if(konusuyorMu){ sesKapat(); return; }
+  try{
+    localStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    konusuyorMu=true; $("mik").textContent="🔇 Mikrofonu kapat"; cizOnline(); yayinla({t:"ping",konusuyor:true});
+    for(const id in online) baglan(id, true);
+  }catch(e){ $("odaDurum").textContent="Mikrofon açılamadı (izin gerekli)."; }
+};
+function sesKapat(){ konusuyorMu=false; if($("mik"))$("mik").textContent="🎤 Mikrofonu aç"; if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;} for(const id in pcler){pcler[id].close();delete pcler[id];} if(_istemci)yayinla({t:"ping",konusuyor:false}); cizOnline(); }
+function yeniPC(id){
+  const pc=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"}]});
+  pcler[id]=pc;
+  if(localStream) localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
+  pc.onicecandidate=e=>{ if(e.candidate) yayinla({t:"ice",hedef:id,c:e.candidate}); };
+  pc.ontrack=e=>{ let a=document.getElementById("ses_"+id); if(!a){a=document.createElement("audio");a.id="ses_"+id;a.autoplay=true;document.body.appendChild(a);} a.srcObject=e.streams[0]; };
+  return pc;
+}
+async function baglan(id, baslatan){ if(pcler[id])return; const pc=yeniPC(id); if(baslatan){ const o=await pc.createOffer(); await pc.setLocalDescription(o); yayinla({t:"offer",hedef:id,sdp:o}); } }
+async function sesSinyal(m){
+  let pc=pcler[m.id]; if(!pc && m.t==="offer") pc=yeniPC(m.id); if(!pc)return;
+  if(m.t==="offer"){ await pc.setRemoteDescription(m.sdp); const a=await pc.createAnswer(); await pc.setLocalDescription(a); yayinla({t:"answer",hedef:m.id,sdp:a}); }
+  else if(m.t==="answer"){ await pc.setRemoteDescription(m.sdp); }
+  else if(m.t==="ice"){ try{ await pc.addIceCandidate(m.c); }catch(e){} }
+}
+addEventListener("beforeunload", ()=>{ try{yayinla({t:"cik"});}catch(e){} });
+</script></body></html>
