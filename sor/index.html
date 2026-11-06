@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChatGPT'ye Sor — Paket</title>
+<style>
+body{margin:0;background:#0b0712;color:#eee;font:15px system-ui,Segoe UI,Roboto,sans-serif;padding:14px}
+h1{font-size:19px;margin:6px 0}
+p{color:#a99fc6;font-size:13px;margin:4px 0 12px}
+button{width:100%;padding:16px;border:0;border-radius:14px;background:linear-gradient(90deg,#10a37f,#0d8a6c);color:#fff;font-weight:800;font-size:17px;cursor:pointer;position:sticky;top:8px;z-index:2}
+textarea{width:100%;height:60vh;margin-top:12px;background:#15101f;color:#e9e3ff;border:1px solid #2e2446;border-radius:12px;padding:12px;font:13px ui-monospace,monospace;box-sizing:border-box}
+.ok{color:#4ade80;text-align:center;font-weight:700;min-height:20px;margin-top:8px}
+</style></head><body>
+<h1>🤖 ChatGPT'ye Sor</h1>
+<p>1) Aşağıdaki butona bas (metin kopyalanır) → 2) ChatGPT uygulamasını aç → 3) Yapıştır → Gönder.</p>
+<button onclick="k()">📋 Metni Kopyala</button>
+<div class="ok" id="o"></div>
+<textarea id="t" readonly>
+Merhaba. Elimde birkaç proje var, hepsini sana anlatıp AKIL/FİKİR istiyorum.
+Amacım: bu projeleri PARASIZ (kredi kartı olmadan) şekilde internette, 7/24
+ayakta tutmak. Aşağıda durumu dürüstçe yazdım. Sonundaki soruları cevapla.
+
+== KİM ==
+Adım Enes. Çok param yok, kredi kartım yok. Kendi uygulamam "Çukur"u yayına
+sokmak istiyorum ama sunucu pahalı diye çıkamadım. Bu yüzden ücretsiz altyapı
+arıyorum.
+
+== PROJELER VE DURUM ==
+
+1) DIŞ BEYİN (bilgi motoru)
+   - Tek bir HTML sayfası. İçine ~70.000 Vikipedi satırı gömülü (gzip+base64).
+   - Tarayıcıda BM25 arama + kural tabanlı cevap çıkarma. Sunucu YOK.
+   - Parolayla kilitli (AES-GCM). CANLI:
+     https://enestaspatlatan6-ui.github.io
+   - Durum: ÇALIŞIYOR, bedava, GitHub Pages'te kalıcı.
+
+2) YANKI (sesli oda + jetonlu slot)
+   - Sesli odalar: MQTT (broker.emqx.io, hesapsız) + WebRTC ses.
+   - Slot makinesi: sanal jeton (gerçek paraya çevrilmez, kumar değil).
+   - CANLI: https://enestaspatlatan6-ui.github.io/oda
+   - Durum: ÇALIŞIYOR, bedava, statik.
+
+3) KEHANET (tarot + kahve falı + günlük burç) — Flutter Android uygulaması
+   - Hesaplama tamamen cihazda, sunucu gerekmez. Reklam + uygulama içi satın
+     alma eklentileri var (google_mobile_ads, in_app_purchase).
+   - APK telefona kurulabilir:
+     https://enestaspatlatan6-ui.github.io/indir
+   - Durum: ÇALIŞIYOR. Play Store için Google Play Developer hesabı ($25 +
+     kart) gerekiyor, henüz yok.
+
+4) ÇUKUR (ASIL PROJE) — sesli sohbet + slot + sosyal, TikTok tarzı
+   - Backend: Fastify + Prisma + PostgreSQL (118 migration) + LiveKit (sesli
+     oda için WebRTC sunucusu) + S3/R2 (medya) + Firebase (bildirim).
+   - Uygulama: Flutter (Android). Çok ağır, çok özellik.
+   - Durum: KENDİ BİLGİSAYARIMDA ÇALIŞIYOR (Docker Postgres + migration +
+     server + /health = ok). Aynı wifi'da telefondan erişiliyor.
+   - YAYINA ÇIKAMIYOR çünkü: kalıcı sunucu lazım, ücretsiz+kartsız bir yol
+     bulamadım.
+
+== ŞU ANA KADAR DENENEN ÜCRETSİZ SUNUCU YOLLARI ==
+   - GitHub Pages: sadece statik sayfa (beyin, Yankı için oldu). Backend
+     çalıştıramaz.
+   - cloudflared / localtunnel tüneli: PC açıkken geçici genel adres verir,
+     kalıcı değil.
+   - Kartsız bulut planı: Back4App Containers + Neon (Postgres) + LiveKit
+     Cloud + Supabase Storage — hepsi ücretsiz katman, kart istemiyor. Ama
+     her biri için ayrı HESAP açmak gerekiyor; henüz açmadım.
+   - Oracle Always Free: kayıt sürekli hata veriyor.
+
+== BİLİNEN GERÇEKLER ==
+   - "Sınırsız + bedava + milyonlarca kullanıcı + hesapsız + hiçbir cihaza
+     bağlı değil" diye bir sunucu YOK; fizik/ekonomi buna izin vermiyor.
+   - Ücretsiz olan ya küçük ölçekli, ya hesap ister.
+
+== SENDEN İSTEDİĞİM (lütfen somut cevapla) ==
+1. Çukur'un backend'ini (Postgres + Fastify + LiveKit) KREDİ KARTI OLMADAN,
+   kalıcı, 7/24 ücretsiz tutmanın EN İYİ gerçek yolu nedir? Adım adım yaz.
+2. Back4App + Neon + LiveKit Cloud + Supabase kombinasyonundan daha iyi,
+   daha az hesaplı bir ücretsiz yol var mı? (2026 için güncel.)
+3. LiveKit (sesli oda) için ücretsiz katman en pratik hangisi?
+4. Kart olmadan Google Play'e Kehanet'i koymanın bir yolu var mı?
+5. Bu 4 projeyi birbirine bağlayıp tek "akıl" gibi davranmasını sağlamanın
+   mantıklı bir mimarisi olur mu, yoksa ayrı tutmak mı daha iyi?
+
+Lütfen hayal değil, 2026'da gerçekten işleyen, ücretsiz ve kartsız çözümler
+ver. Teşekkürler.
+</textarea>
+<script>
+function k(){const t=document.getElementById('t');t.select();t.setSelectionRange(0,999999);
+navigator.clipboard.writeText(t.value).then(()=>{document.getElementById('o').textContent='✓ Kopyalandi! Simdi ChatGPT uygulamasinda yapistir.';}).catch(()=>{document.execCommand('copy');document.getElementById('o').textContent='✓ Kopyalandı!';});}
+</script>
+</body></html>
